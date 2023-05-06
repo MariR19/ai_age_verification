@@ -9,12 +9,15 @@ def compare_faces(face_img_path, passport_photo_img_path):
     :param passport_photo_img_path: Путь к фотографии с паспортом
     :return: True, если найдено совпадение, False - если нет
     """
+    # Загрузка изображений
     faces_img = fr.load_image_file(face_img_path)
     passport_img = fr.load_image_file(passport_photo_img_path)
 
+    # Получение кодировки изображений
     faces_enc = fr.face_encodings(faces_img)
     passport_enc = fr.face_encodings(passport_img)[0]
 
+    # Сравнение лиц с фотографией в паспорте
     for face_enc in faces_enc:
         if fr.compare_faces([face_enc], passport_enc) == np.True_:
             return True
