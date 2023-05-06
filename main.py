@@ -1,44 +1,33 @@
-import cv2
+import face_recognition as fr
 import numpy as np
-import cv2 as cv
-from pathlib import Path
-from deepface import DeepFace as dp
-import tensorflow
 
 
-# Отобразить изображение на экране
-def show_photo(window_name, img):
-    cv.imshow(window_name, img)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+def compare_faces(face_img_path, passport_photo_img_path):
+    """
+Сравнение лиц на фотографии с лицом в паспорте
+    :param face_img_path: Путь к фотографии с лицом/лицами покупателя/покупателей
+    :param passport_photo_img_path: Путь к фотографии с паспортом
+    :return: True, если найдено совпадение, False - если нет
+    """
+    # Загрузка изображений
+    faces_img = fr.load_image_file(face_img_path)
+    passport_img = fr.load_image_file(passport_photo_img_path)
+
+    # Получение кодировки изображений
+    faces_enc = fr.face_encodings(faces_img)
+    passport_enc = fr.face_encodings(passport_img)[0]
+
+    # Сравнение лиц с фотографией в паспорте
+    for face_enc in faces_enc:
+        if fr.compare_faces([face_enc], passport_enc) == np.True_:
+            return True
+
+    return False
 
 
-# Определение лица с помощью OpenCV
-def find_face_cv():
-    # Загрузить изображение
-    def load_photo(file_name):
-        loading_photo = cv.imread(str(source_folder / file_name))
-        loading_photo = cv2.cvtColor(loading_photo, cv2.COLOR_BGR2GRAY)
-        return loading_photo
-
-    # Папка с исходными изображениями
-
-    # Натренированный классификатор лиц Haar Cascade
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-
-    # Чтение файла
-    photo = load_photo("Passport.jpg")
-
-    # Распознавание лица
-    faces = face_cascade.detectMultiScale(photo, scaleFactor=1.1, minNeighbors=5)
-
-    # Нарисовать прямоугольник вокруг лица
-    for (x, y, w, h) in faces:
-        cv2.rectangle(photo, (x, y), (x + w, y + h), (255, 0, 0), 2)
-
-    show_photo("Face", photo)
+def main():
+    print(compare_faces("Source/Pretty_girl.jpg", "Source/Passport.jpg"))
 
 
-source_folder = Path("Source")
-face = dp.analyze(str(source_folder/"Passport.jpg"))
-print(face)
+if __name__ == "__main__":
+    main()
