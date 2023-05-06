@@ -1,2 +1,4 @@
-numpy==1.24.3
-opencv-python==4.5.4.60
+cmake
+dlib
+face-recognition
+numpy
