@@ -1,5 +1,6 @@
-import face_recognition as fr
 import numpy as np
+import face_recognition as fr
+import passport_recognition
 
 
 def compare_faces(face_img_path, passport_photo_img_path):
@@ -26,7 +27,8 @@ def compare_faces(face_img_path, passport_photo_img_path):
 
 
 def main():
-    print(compare_faces("Source/Pretty_girl.jpg", "Source/Passport.jpg"))
+    print(compare_faces("Source/guy1.jpeg", "Source/pass_great.jpeg"))
+    print(passport_recognition.check_age("Source/pass_great.jpeg"))
 
 
 if __name__ == "__main__":
