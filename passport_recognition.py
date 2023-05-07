@@ -1,6 +1,9 @@
 import cv2 as cv
 import pytesseract
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 
 # Отобразить изображение на экране
 def show_image_cv(cv_image):
@@ -36,7 +39,6 @@ def get_text_from_passport(img_path,
     :param psm_mode: Режим страничной сегментации pytesseract
     :return: весь текст, найденный на фотографии
     """
-
     image = cv.imread(img_path)
 
     if resize_coefficient != 1.0:
@@ -62,6 +64,43 @@ def get_text_from_passport(img_path,
     return data
 
 
-def check_age(img_path):
+# Распознает дату рождения из текста паспорта и высчитывает возраст
+def extract_age(text):
+    mrz_start = "pnrus"  # начало МЧЗ
+    birthdate_start = "rus"  # начало строки с датой рождения
+
+    # преобразование исходного текста
+    text = text.lower().replace(' ', '')
+    text = text.split('\n')
+
+    text_len = len(text)  # длина листа строк
+    line = -1  # текущая строка текста
+    age = -1  # возраст
+
+    # поиск МЧЗ
+    for i in range(len(text)):
+        if text[i].find(mrz_start) > -1:
+            line = i
+            break
+
+    # если line остался -1, МЧЗ не найдена
+    if line == -1:
+        return -1
+
+    if (line+1) < text_len:
+        # определение даты рождения
+        index = text[line+1].find(birthdate_start)+3
+        birthday_str = text[line+1][index:index+6]
+        # преобразование строки в datetime
+        birthday = datetime.strptime(birthday_str, "%y%m%d")
+        # расчет возраста
+        age = relativedelta(datetime.now(), birthday).years
+
+    return age
+
+
+# принимает фото паспорта (МЧЗ паспорта) и возвращает возраст владельца
+def get_age(img_path):
     passport_text = get_text_from_passport(img_path)
-    return False
+    age = extract_age(passport_text)
+    return age
