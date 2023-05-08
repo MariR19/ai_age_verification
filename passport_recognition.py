@@ -19,27 +19,22 @@ def resize_image(img, coefficient):
     return new_image
 
 
-def get_text_from_passport(img_path,
-                           resize_coefficient=1.0,
-                           use_blur=False,
-                           use_morph=False,
-                           morph_type=2,
-                           kernel_shape=cv.MORPH_RECT,
-                           kernel_size=1,
-                           psm_mode=6):
+def get_text_from_passport(config, img_path):
     """
     Считывает текст с фотографии паспорта
+    :param config: Словарь настроек
     :param img_path: Путь к изображению;
-    :param resize_coefficient: Коэффициент масштабирования изображения;
-    :param use_blur: Использовать размытие;
-    :param use_morph: Использовать морфологическое преобразование;
-    :param morph_type: Тип морфологического преобразования;
-    :param kernel_shape: Форма матрицы ядра для морф. преобразования;
-    :param kernel_size: Размер матрицы ядра для морф. преобразования;
-    :param psm_mode: Режим страничной сегментации pytesseract
     :return: весь текст, найденный на фотографии
     """
     try:
+        resize_coefficient = float(config['resize_coefficient'])
+        use_blur = bool(config['use_blur'])
+        use_morph = bool(config['use_morphological_function'])
+        morph_type = int(config['morphological_function_type'])
+        kernel_shape = int(config['kernel_matrix_shape'])
+        kernel_size = int(config['kernel_matrix_size'])
+        psm_mode = int(config['ocr_psm_mode'])
+
         image = cv.imread(img_path)
 
         if resize_coefficient != 1.0:
@@ -103,8 +98,8 @@ def extract_age(text):
 
 
 # принимает фото паспорта (МЧЗ паспорта) и возвращает возраст владельца
-def get_age(img_path):
-    passport_text = get_text_from_passport(img_path)
+def get_age(text_rec_cfg, temp_folder):
+    passport_text = get_text_from_passport(text_rec_cfg, temp_folder+'passport_bottom.jpg')
     age = None
     if passport_text is not None:
         age = extract_age(passport_text)
