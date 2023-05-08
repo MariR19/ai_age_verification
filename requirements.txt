@@ -2,3 +2,10 @@ cmake
 dlib
 face-recognition
 numpy
+Pillow
+scikit-image
+scipy
+imutils
+opencv-python==4.5.4.60
+pytesseract
+natsort
