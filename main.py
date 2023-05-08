@@ -15,9 +15,6 @@ def load_photos(face_path, passport_path):
         return None, None
 
 
-
-
-
 def main():
     cfg = settings.Settings('settings.ini')
     path = cfg.get('PATH')
