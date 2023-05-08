@@ -2,39 +2,46 @@ import cv2 as cv
 
 import passport_recognition
 import face_detection
+import settings
 
 
 # Загружает фотографии в виде массива numpy
-def load_photos():
-    face = None
-    passport = None
+def load_photos(face_path, passport_path):
     try:
-        face = cv.imread("Source/Pretty_girl.jpg")
-        passport = cv.imread("Source/pass_another.jpg")
-    finally:
+        face = cv.imread(face_path)
+        passport = cv.imread(passport_path)
         return face, passport
+    except Exception:
+        return None, None
 
 
 def main():
-    face, passport = load_photos()
-    if face is None or passport is None:
-        print("-1\nОшибка загрузки изображений")
+    cfg = settings.Settings('settings.ini')
+    path = cfg.get('PATH')
+    text_rec = cfg.get('Text Recognition')
+    output = cfg.get('Output')
 
-    faces_checked = face_detection.process_faces(face, passport)
+    face, passport = load_photos(path['source_face_photo'], path['source_passport_photo'])
+
+    if (face is None) or (passport is None):
+        print(output['error_loading_images'])
+        return
+
+    faces_checked = face_detection.process_faces(path['temp_folder'], face, passport)
     if faces_checked is None:
-        print("-2\nОшибка распознавания лиц")
+        print(output['error_face_recognition'])
         return
 
     if faces_checked:
-        age = passport_recognition.get_age("Source/Temp/passport_bottom.jpg")
+        age = passport_recognition.get_age(text_rec, path['temp_folder'])
         if age is None:
-            print("-3\nОшибка распознавания возраста")
+            print(output['error_age_extraction'])
         elif age >= 18:
-            print("0\nПроверка пройдена успешно")
+            print(output['result_success'])
         else:
-            print("1\nПроверка не пройдена - возраст меньше 18")
+            print(output['result_bad_age'])
     else:
-        print("2\nПроверка не пройдена - лица не совпадают")
+        print(output['result_bad_faces'])
 
 
 if __name__ == "__main__":
