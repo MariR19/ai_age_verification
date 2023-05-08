@@ -61,7 +61,7 @@ def get_text_from_passport(img_path,
             image = cv.morphologyEx(image, morph_type, kernel)
 
         # Извлечение текста
-        data = pytesseract.image_to_string(image, config=f'-l eng --psm 6 {psm_mode}')
+        data = pytesseract.image_to_string(image, config=f'-l eng --psm {psm_mode}')
         return data
     except Exception:
         return None
