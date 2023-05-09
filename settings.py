@@ -43,6 +43,9 @@ class Settings:
                             'result_success': "0\nПроверка пройдена успешно",
                             'result_bad_age': "1\nПроверка не пройдена - возраст меньше 18",
                             'result_bad_faces': "2\nПроверка не пройдена - лица не совпадают"}
+        config['Network'] = {'key': '0123456789abcdef',
+                             'server_url': 'localhost',
+                             'server_port': 12344}
 
         # Запись файла настроек
         with open(self._settings_file_path, 'w') as file:

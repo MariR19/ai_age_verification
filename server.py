@@ -1,6 +1,12 @@
 import sys
 import socket
 import threading
+import io
+import numpy as np
+
+from Worker import worker
+import encoder
+import settings
 
 # Создание сокета
 server_socket = socket.socket()
@@ -32,15 +38,55 @@ def handle_console():
 
 
 # Запуск обработки данных
-def handle_client(client_socket):
+def handle_client(client_socket, config):
     print("Новое соединение")
-    data = client_socket.recv(1024)
-    client_socket.send("Server got the message".encode())
+
+    # Прием длинны данных
+    face_length = int.from_bytes(client_socket.recv(4), 'big')
+    client_socket.send(b'1')
+    face_shape_length = int.from_bytes(client_socket.recv(4), 'big')
+    client_socket.send(b'1')
+    passport_length = int.from_bytes(client_socket.recv(4), 'big')
+    client_socket.send(b'1')
+    passport_shape_length = int.from_bytes(client_socket.recv(4), 'big')
+    client_socket.send(b'1')
+    print("Длинна пришла")
+    # Прием байтов данных
+    face_encoded = client_socket.recv(face_length)
+    client_socket.send(b'1')
+    face_shape_bytes = client_socket.recv(face_shape_length)
+    client_socket.send(b'1')
+    print("форма лица пришла")
+    passport_encoded = client_socket.recv(passport_length)
+    client_socket.send(b'1')
+    passport_shape_bytes = client_socket.recv(passport_shape_length)
+    client_socket.send(b'1')
+    print("форма паспорта пришла")
+
+
+    print(face_shape_bytes)
+    print(face_length)
+
+    # преобразование кортежей
+    face_shape = tuple(face_shape_bytes.decode('utf-8'))
+    passport_shape = tuple(passport_shape_bytes.decode('utf-8'))
+
+    # Расшифровка данных
+    face = encoder.decode(face_encoded, config['Network']['key'], face_shape)
+    passport = encoder.decode(passport_encoded, config['Network']['key'],passport_shape)
+
+    # обработка изображений
+    response = worker.start_job(config, face, passport)
+
+    # отправка результата
+    client_socket.send(response.encode())
     client_socket.close()
     print("Соединение закрыто")
 
 
 def main():
+    config = settings.Settings('settings.ini')
+
     # Запуск процесса обработки консольных команд
     console_thread = threading.Thread(target=handle_console)
     console_thread.start()
@@ -52,7 +98,7 @@ def main():
         except OSError:
             break
         # Запуск обработки клиента
-        client_thread = threading.Thread(target=handle_client, args=(client_socket,))
+        client_thread = threading.Thread(target=handle_client, args=(client_socket,config))
         client_thread.start()
 
     console_thread.join()
