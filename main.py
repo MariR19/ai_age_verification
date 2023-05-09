@@ -1,8 +1,9 @@
-import client
-
+from Worker import worker
+import settings
 
 def main():
-    client.start_job()
+    cfg = settings.Settings('settings.ini')
+    worker.start_job(cfg)
 
 
 if __name__ == "__main__":

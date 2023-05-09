@@ -26,9 +26,9 @@ class Settings:
         config = cfg.ConfigParser()
 
         # Определение стандартных настроек
-        config['PATH'] = {'source_face_photo': 'Source/face.jpg',
-                          'source_passport_photo': 'Source/passport.jpg',
-                          'temp_folder': 'source/Temp/'}
+        config['PATH'] = {'source_face_photo': 'Worker/Source/face.jpg',
+                          'source_passport_photo': 'Worker/Source/passport.jpg',
+                          'temp_folder': 'Worker/source/Temp/'}
 
         config['Text Recognition'] = {'resize_coefficient': '1.0',
                                       'use_blur': 'False',

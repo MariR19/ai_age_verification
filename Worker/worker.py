@@ -1,12 +1,13 @@
-import passport_recognition
-import face_detection
-import settings
+from Worker import passport_recognition
+from Worker import face_detection
 
 import cv2 as cv
 
 
 # Загружает фотографии в виде массива numpy
 def load_photos(face_path, passport_path):
+    print(face_path)
+    print(passport_path)
     try:
         face = cv.imread(face_path)
         passport = cv.imread(passport_path)
@@ -15,8 +16,7 @@ def load_photos(face_path, passport_path):
         return None, None
 
 
-def start_job():
-    cfg = settings.Settings('settings.ini')
+def start_job(cfg):
     path = cfg.get('PATH')
     text_rec = cfg.get('Text Recognition')
     output = cfg.get('Output')
