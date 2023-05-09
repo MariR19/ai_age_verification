@@ -24,11 +24,13 @@ def send_request(url, face, face_shape, passport, passport_shape):
     # Отправка запроса
     response = requests.post(f'{url}/process', data=data_json, headers=headers)
     # извлечение json с результатом из полученного ответа
+
     return response.json()
 
 
 # Загружает фотографии в виде массива numpy
 def load_photos(face_path, passport_path):
+    print(face_path)
     try:
         face = cv.imread(face_path)
         passport = cv.imread(passport_path)
@@ -41,7 +43,7 @@ def main():
     start_time = time.time()  # debug - расчет времени работы
 
     # Извлечение настроек
-    config = settings.Settings('settings.ini')
+    config = settings.Settings('../settings.ini')
     path = config.get('PATH')
     output = config.get('Output')
     network = config.get('Network')

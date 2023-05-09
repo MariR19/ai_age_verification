@@ -65,7 +65,7 @@ def server_run():
 
 if __name__ == "__main__":
     # извлечение настроек
-    config = settings.Settings('settings.ini')
+    config = settings.Settings('../settings.ini')
 
     # запуск потока обработки консольных команд
     console_thread = threading.Thread(target=handle_console)
