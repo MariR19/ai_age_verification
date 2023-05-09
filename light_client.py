@@ -1,49 +1,29 @@
 import socket
 import cv2 as cv
+import json
+import requests
+import time
 
 import settings
 import encoder
 
 
 def send_request(url, port, face, face_shape, passport, passport_shape):
-    client_socket = socket.socket()
-    client_socket.connect((url, port))
-    print("connected\n")
+    data = {
+        'face': face.hex(),
+        'passport': passport.hex(),
+        'face_shape': face_shape,
+        'passport_shape': passport_shape
+    }
+    data_json = json.dumps(data)
+    headers = {'Content-Type': 'application/json'}
 
-    print(face_shape)
-    print(client_socket.send(len(face_shape).to_bytes(4, 'big')))
-
-    # отправка длинны данных
-    client_socket.send(len(face).to_bytes(4, 'big'))
-    client_socket.recv(1)
-    client_socket.send(len(face_shape).to_bytes(4, 'big'))
-    client_socket.recv(1)
-    client_socket.send(len(passport).to_bytes(4, 'big'))
-    client_socket.recv(1)
-    client_socket.send(len(passport_shape).to_bytes(4, 'big'))
-    client_socket.recv(1)
-
-    # Отправка данных
-    client_socket.send(face)
-    client_socket.recv(1)
-    client_socket.send(face_shape)
-    client_socket.recv(1)
-    client_socket.send(passport)
-    client_socket.recv(1)
-    client_socket.send(passport_shape)
-    client_socket.recv(1)
-
-    print("data sent\n")
-    response = client_socket.recv(1024)
-    client_socket.close()
-
-    return response.decode()
+    response = requests.post(f'{url}/process', data=data_json, headers=headers)
+    return response.json()
 
 
 # Загружает фотографии в виде массива numpy
 def load_photos(face_path, passport_path):
-    print(face_path)
-    print(passport_path)
     try:
         face = cv.imread(face_path)
         passport = cv.imread(passport_path)
@@ -53,6 +33,7 @@ def load_photos(face_path, passport_path):
 
 
 def main():
+    start_time = time.time()
     # Извлечение настроек
     config = settings.Settings('settings.ini')
     path = config.get('PATH')
@@ -73,10 +54,11 @@ def main():
     # Отправка запроса на обработку
     url = network['server_url']
     port = int(network['server_port'])
-    response = send_request(url, port, face_encoded, str(face.shape).encode('utf-8'),
-                            passport_encoded, str(passport.shape).encode('utf-8'))
+    response = send_request(url, port, face_encoded, face.shape, passport_encoded, passport.shape)
 
     print(response)
+    end_rime = time.time()
+    print(f"Работа выполнена за {end_rime-start_time} секунд")
 
 
 if __name__ == "__main__":
