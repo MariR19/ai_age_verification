@@ -1,4 +1,3 @@
-import socket
 import cv2 as cv
 import json
 import requests
@@ -8,7 +7,9 @@ import settings
 import encoder
 
 
-def send_request(url, port, face, face_shape, passport, passport_shape):
+# Отправка запроса
+def send_request(url, face, face_shape, passport, passport_shape):
+    # Запись данных в json
     data = {
         'face': face.hex(),
         'passport': passport.hex(),
@@ -16,9 +17,13 @@ def send_request(url, port, face, face_shape, passport, passport_shape):
         'passport_shape': passport_shape
     }
     data_json = json.dumps(data)
+
+    # формирование заголовка для того, чтобы сервер прочитал json
     headers = {'Content-Type': 'application/json'}
 
+    # Отправка запроса
     response = requests.post(f'{url}/process', data=data_json, headers=headers)
+    # извлечение json с результатом из полученного ответа
     return response.json()
 
 
@@ -33,7 +38,8 @@ def load_photos(face_path, passport_path):
 
 
 def main():
-    start_time = time.time()
+    start_time = time.time()  # debug - расчет времени работы
+
     # Извлечение настроек
     config = settings.Settings('settings.ini')
     path = config.get('PATH')
@@ -53,10 +59,12 @@ def main():
 
     # Отправка запроса на обработку
     url = network['server_url']
-    port = int(network['server_port'])
-    response = send_request(url, port, face_encoded, face.shape, passport_encoded, passport.shape)
+    response = send_request(url, face_encoded, face.shape, passport_encoded, passport.shape)
 
+    # Вывод результата
     print(response)
+
+    # Вывод затраченного времени
     end_rime = time.time()
     print(f"Работа выполнена за {end_rime-start_time} секунд")
 
