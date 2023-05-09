@@ -26,9 +26,9 @@ class Settings:
         config = cfg.ConfigParser()
 
         # Определение стандартных настроек
-        config['PATH'] = {'source_face_photo': 'Source/face.jpg',
-                          'source_passport_photo': 'Source/passport.jpg',
-                          'temp_folder': 'source/Temp/'}
+        config['PATH'] = {'source_face_photo': 'Worker/Source/face.jpg',
+                          'source_passport_photo': 'Worker/Source/passport.jpg',
+                          'temp_folder': 'Worker/source/Temp/'}
 
         config['Text Recognition'] = {'resize_coefficient': '1.0',
                                       'use_blur': 'False',
@@ -43,6 +43,9 @@ class Settings:
                             'result_success': "0\nПроверка пройдена успешно",
                             'result_bad_age': "1\nПроверка не пройдена - возраст меньше 18",
                             'result_bad_faces': "2\nПроверка не пройдена - лица не совпадают"}
+        config['Network'] = {'key': '0123456789abcdef',
+                             'server_url': 'localhost',
+                             'server_port': 12344}
 
         # Запись файла настроек
         with open(self._settings_file_path, 'w') as file:

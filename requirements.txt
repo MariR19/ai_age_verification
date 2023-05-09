@@ -9,3 +9,5 @@ imutils
 opencv-python==4.5.4.60
 pytesseract
 natsort
+flask
+requests
