@@ -3,7 +3,7 @@ import socket
 
 def main():
     client_socket = socket.socket()
-    client_socket.connect(('localhost', 12345))
+    client_socket.connect(('localhost', 12344))
     print("connected\n")
 
     data = "hello, server"
