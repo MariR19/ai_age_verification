@@ -1,8 +1,10 @@
 import cv2 as cv
+import numpy as np
 
 import passport_recognition
 import face_detection
 import settings
+import encoder
 
 
 # Загружает фотографии в виде массива numpy
@@ -15,7 +17,7 @@ def load_photos(face_path, passport_path):
         return None, None
 
 
-def main():
+def start():
     cfg = settings.Settings('settings.ini')
     path = cfg.get('PATH')
     text_rec = cfg.get('Text Recognition')
@@ -42,6 +44,11 @@ def main():
             print(output['result_bad_age'])
     else:
         print(output['result_bad_faces'])
+
+
+def main():
+    start()
+
 
 
 if __name__ == "__main__":
