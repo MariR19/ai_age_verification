@@ -1,0 +1,9 @@
+face-recognition
+Pillow
+cmake
+dlib
+opencv-python==4.5.4.60
+numpy
+pytesseract
+flask
+
