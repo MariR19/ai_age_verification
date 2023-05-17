@@ -7,7 +7,6 @@ from Worker import worker
 
 # Загружает фотографии в виде массива numpy
 def load_photos(face_path, passport_path):
-    print(face_path)
     try:
         face = cv.imread(face_path)
         passport = cv.imread(passport_path)
@@ -17,7 +16,7 @@ def load_photos(face_path, passport_path):
 
 
 def main():
-    start_time = time.time()  # debug - расчет времени работы
+    # start_time = time.time()  # debug - расчет времени работы
 
     # Извлечение настроек
     config = settings.Settings('settings.ini')
@@ -37,8 +36,8 @@ def main():
     print(response)
 
     # Вывод затраченного времени
-    end_rime = time.time()
-    print(f"Работа выполнена за {end_rime-start_time} секунд")
+    # end_rime = time.time()
+    # print(f"Работа выполнена за {end_rime-start_time} секунд")
 
 
 if __name__ == "__main__":
