@@ -21,7 +21,8 @@ def compare_faces(temp_folder):
                 return True
         return False
 
-    except Exception:
+    except Exception as e:
+        print(str(e))
         return None
 
 
