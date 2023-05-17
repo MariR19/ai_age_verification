@@ -17,8 +17,6 @@ app = Flask(__name__)
 @app.route('/process', methods=['POST'])
 def process():
 
-    print("new connection")
-
     # получение json с данными
     data = request.get_json()
 
@@ -65,7 +63,7 @@ def server_run():
 
 if __name__ == "__main__":
     # извлечение настроек
-    config = settings.Settings('../settings.ini')
+    config = settings.Settings('settings_server.ini')
 
     # запуск потока обработки консольных команд
     console_thread = threading.Thread(target=handle_console)

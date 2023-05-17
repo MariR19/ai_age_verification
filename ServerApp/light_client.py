@@ -40,10 +40,10 @@ def load_photos(face_path, passport_path):
 
 
 def main():
-    start_time = time.time()  # debug - расчет времени работы
+    # start_time = time.time()  # debug - расчет времени работы
 
     # Извлечение настроек
-    config = settings.Settings('../settings.ini')
+    config = settings.Settings('settings_client.ini')
     path = config.get('PATH')
     output = config.get('Output')
     network = config.get('Network')
@@ -67,8 +67,8 @@ def main():
     print(response)
 
     # Вывод затраченного времени
-    end_rime = time.time()
-    print(f"Работа выполнена за {end_rime-start_time} секунд")
+    # end_rime = time.time()
+    # print(f"Работа выполнена за {end_rime-start_time} секунд")
 
 
 if __name__ == "__main__":
