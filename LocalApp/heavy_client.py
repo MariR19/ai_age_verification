@@ -1,5 +1,7 @@
 import cv2 as cv
+import os
 import time
+import shutil
 
 import settings
 from Worker import worker
@@ -23,6 +25,14 @@ def main():
     path = config.get('PATH')
     output = config.get('Output')
 
+    # debug
+    shutil.copyfile('../Worker/Source/Test/face_female.jpeg', path['source_face_photo'])
+    shutil.copyfile('../Worker/Source/Test/pass_female.jpeg', path['source_passport_photo'])
+    if not os.path.exists(path['temp_folder']):
+        os.mkdir(path['temp_folder'])
+    # debug
+
+
     # Загрузка изображений
     face, passport = load_photos(path['source_face_photo'], path['source_passport_photo'])
     if (face is None) or (passport is None):
@@ -34,6 +44,16 @@ def main():
 
     # Вывод результата
     print(response)
+
+    # debug
+    try:
+        os.remove(path['source_face_photo'])
+        os.remove(path['source_passport_photo'])
+        shutil.rmtree(path['temp_folder'])
+        print('Файлы удалены')
+    except Exception as e:
+        print("Ошибка удаления файлов: "+str(e))
+    # debug
 
     # Вывод затраченного времени
     # end_rime = time.time()
