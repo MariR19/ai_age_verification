@@ -28,9 +28,10 @@ def main():
     # debug
     shutil.copyfile('../Worker/Source/Test/face_female.jpeg', path['source_face_photo'])
     shutil.copyfile('../Worker/Source/Test/pass_female.jpeg', path['source_passport_photo'])
+    # debug
+
     if not os.path.exists(path['temp_folder']):
         os.mkdir(path['temp_folder'])
-    # debug
 
 
     # Загрузка изображений
@@ -45,7 +46,7 @@ def main():
     # Вывод результата
     print(response)
 
-    # debug
+    # Удаление файлов
     try:
         os.remove(path['source_face_photo'])
         os.remove(path['source_passport_photo'])
@@ -53,7 +54,6 @@ def main():
         print('Файлы удалены')
     except Exception as e:
         print("Ошибка удаления файлов: "+str(e))
-    # debug
 
     # Вывод затраченного времени
     # end_rime = time.time()

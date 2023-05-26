@@ -28,7 +28,7 @@ class Settings:
         # Определение стандартных настроек
         config['PATH'] = {'source_face_photo': '../Worker/Source/face.jpeg',
                           'source_passport_photo': '../Worker/Source/pass.jpeg',
-                          'temp_folder': '../Worker/source/Temp/'}
+                          'temp_folder': '../Worker/Source/Temp/'}
 
         config['Text Recognition'] = {'resize_coefficient': '1.0',
                                       'use_blur': 'False',
